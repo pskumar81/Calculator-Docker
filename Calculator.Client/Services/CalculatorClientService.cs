@@ -1,5 +1,6 @@
 using Calculator.Client.Services.Interfaces;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Logging;
 
 namespace Calculator.Client.Services;
 
