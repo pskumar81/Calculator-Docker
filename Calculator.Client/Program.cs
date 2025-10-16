@@ -4,7 +4,8 @@ using Calculator.Client;
 Console.WriteLine("Welcome to the Calculator Client!");
 Console.WriteLine("Connecting to the Calculator Server...");
 
-using var channel = GrpcChannel.ForAddress("http://localhost:5000");
+var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") ?? "http://localhost:5000";
+using var channel = GrpcChannel.ForAddress(serverUrl);
 var client = new CalculatorService.CalculatorServiceClient(channel);
 
 while (true)

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  calculator-server:
+    build:
+      context: .
+      dockerfile: Calculator.Server/Dockerfile
+    ports:
+      - "5001:80"
+      - "5002:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+    networks:
+      - calculator-network
+
+  calculator-client:
+    build:
+      context: .
+      dockerfile: Calculator.Client/Dockerfile
+    depends_on:
+      - calculator-server
+    environment:
+      - SERVER_URL=http://calculator-server:80
+    networks:
+      - calculator-network
+
+networks:
+  calculator-network:
+    driver: bridge
