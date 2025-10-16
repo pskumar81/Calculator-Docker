@@ -12,6 +12,8 @@ A modern calculator implementation using gRPC for service communication in .NET 
 
 - **Calculator.Client**: Console application that connects to the gRPC server
   - Demonstrates how to make gRPC calls to the server
+  - Implements dependency injection for better service management
+  - Uses structured logging for operation tracking
   - Handles server responses and errors
   - Containerized with Docker
   - Configurable server connection through environment variables
@@ -38,6 +40,9 @@ A modern calculator implementation using gRPC for service communication in .NET 
 - Built with .NET 9.0
 - Uses gRPC for service communication
 - Implements async/await pattern
+- Implements Dependency Injection (DI) principles
+- Includes comprehensive logging with Microsoft.Extensions.Logging
+- Follows IoC principles for better maintainability and testing
 - Includes proper error handling and logging
 - Follows C# best practices
 
