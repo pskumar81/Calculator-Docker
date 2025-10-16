@@ -9,7 +9,12 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCalculatorClient(this IServiceCollection services, string serverUrl)
     {
-        services.AddSingleton(GrpcChannel.ForAddress(serverUrl));
+        var channel = GrpcChannel.ForAddress(serverUrl, new GrpcChannelOptions
+        {
+            Credentials = Grpc.Core.ChannelCredentials.Insecure
+        });
+
+        services.AddSingleton(channel);
         services.AddScoped<ICalculatorClientService, CalculatorClientService>();
         
         return services;

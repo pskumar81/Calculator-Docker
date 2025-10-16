@@ -6,11 +6,10 @@ services:
       context: .
       dockerfile: Calculator.Server/Dockerfile
     ports:
-      - "5001:80"
-      - "5002:443"
+      - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_URLS=https://+:5001
     networks:
       - calculator-network
 
@@ -21,7 +20,7 @@ services:
     depends_on:
       - calculator-server
     environment:
-      - SERVER_URL=http://calculator-server:80
+      - SERVER_URL=https://calculator-server:5001
     networks:
       - calculator-network
 

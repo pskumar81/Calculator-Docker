@@ -15,6 +15,5 @@ RUN dotnet publish "Calculator.Server/Calculator.Server.csproj" -c Release -o /a
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 80
-EXPOSE 443
+EXPOSE 5001
 ENTRYPOINT ["dotnet", "Calculator.Server.dll"]

@@ -10,7 +10,7 @@ Console.WriteLine("Connecting to the Calculator Server...");
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") ?? "http://localhost:5000";
+        var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") ?? "http://localhost:5001";
         services.AddCalculatorClient(serverUrl);
     })
     .Build();
