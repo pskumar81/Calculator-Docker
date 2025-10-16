@@ -38,12 +38,13 @@ A modern calculator implementation using gRPC for service communication in .NET 
 ## Technical Details
 
 - Built with .NET 9.0
-- Uses gRPC for service communication
+- Uses gRPC for service communication over HTTP/2
 - Implements async/await pattern
 - Implements Dependency Injection (DI) principles
 - Includes comprehensive logging with Microsoft.Extensions.Logging
 - Follows IoC principles for better maintainability and testing
 - Includes proper error handling and logging
+- Certificate generation tools for secure communication
 - Follows C# best practices
 
 ## Getting Started
@@ -98,6 +99,32 @@ dotnet test
 ## Docker Support
 
 The application is fully containerized with Docker support:
+
+- Multi-stage Docker builds for both client and server
+- Docker Compose for easy deployment and service orchestration
+- Configured for HTTP/2 communication
+- Includes certificate generation tools for secure communication
+
+### Certificate Generation
+
+The project includes tools for generating certificates for secure communication:
+
+1. Navigate to the certs directory:
+   ```bash
+   cd certs
+   ```
+
+2. Run the certificate generation script:
+   ```bash
+   ./generate-certs.ps1
+   ```
+
+This will generate:
+- CA certificate
+- Server certificate
+- Client certificate
+
+These certificates can be used to enable mutual TLS (mTLS) for secure communication between the client and server.
 
 - **Multi-stage builds** for both client and server
 - **Docker Compose** for service orchestration
