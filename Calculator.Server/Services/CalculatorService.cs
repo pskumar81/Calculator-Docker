@@ -1,8 +1,9 @@
 using Grpc.Core;
+using Calculator.Server.Services.Interfaces;
 
 namespace Calculator.Server.Services;
 
-public class CalculatorServiceImpl : CalculatorService.CalculatorServiceBase
+public class CalculatorServiceImpl : CalculatorService.CalculatorServiceBase, ICalculatorService
 {
     private readonly ILogger<CalculatorServiceImpl> _logger;
     

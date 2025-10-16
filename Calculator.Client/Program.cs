@@ -1,12 +1,22 @@
-﻿﻿using Grpc.Net.Client;
-using Calculator.Client;
+﻿using Calculator.Client.Extensions;
+using Calculator.Client.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 Console.WriteLine("Welcome to the Calculator Client!");
 Console.WriteLine("Connecting to the Calculator Server...");
 
-var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") ?? "http://localhost:5000";
-using var channel = GrpcChannel.ForAddress(serverUrl);
-var client = new CalculatorService.CalculatorServiceClient(channel);
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") ?? "http://localhost:5000";
+        services.AddCalculatorClient(serverUrl);
+    })
+    .Build();
+
+var calculatorService = host.Services.GetRequiredService<ICalculatorClientService>();
+var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
 while (true)
 {
@@ -43,37 +53,36 @@ while (true)
 
     try
     {
-        var request = new CalculateRequest { Number1 = num1, Number2 = num2 };
-        CalculateReply reply;
+        double result;
         string operationSymbol;
 
         switch (operation)
         {
             case "1":
-                reply = await client.AddAsync(request);
+                result = await calculatorService.AddAsync(num1, num2);
                 operationSymbol = "+";
                 break;
             case "2":
-                reply = await client.SubtractAsync(request);
+                result = await calculatorService.SubtractAsync(num1, num2);
                 operationSymbol = "-";
                 break;
             case "3":
-                reply = await client.MultiplyAsync(request);
+                result = await calculatorService.MultiplyAsync(num1, num2);
                 operationSymbol = "*";
                 break;
             case "4":
-                reply = await client.DivideAsync(request);
+                result = await calculatorService.DivideAsync(num1, num2);
                 operationSymbol = "/";
                 break;
             default:
                 continue;
         }
 
-        Console.WriteLine($"Result from server: {num1} {operationSymbol} {num2} = {reply.Result}");
+        Console.WriteLine($"Result: {num1} {operationSymbol} {num2} = {result}");
     }
     catch (Exception ex)
     {
+        logger.LogError(ex, "Error occurred while processing the calculation");
         Console.WriteLine($"Error: {ex.Message}");
-        Console.WriteLine("Make sure the server is running.");
     }
 }

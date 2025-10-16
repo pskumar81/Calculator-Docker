@@ -1,9 +1,10 @@
+using Calculator.Server.Extensions;
 using Calculator.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddCalculatorServices();
 
 var app = builder.Build();
 
