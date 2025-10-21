@@ -4,6 +4,31 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>true</IsPackable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>Calculator.GrpcServer</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Title>Calculator gRPC Server</Title>
+    <Authors>Calculator Team</Authors>
+    <Company>Calculator Corp</Company>
+    <Description>A high-performance gRPC server implementation for calculator operations including Add, Subtract, Multiply, and Divide operations. Supports both traditional gRPC and gRPC-Web protocols for browser compatibility.</Description>
+    <PackageTags>grpc;calculator;server;arithmetic;dotnet;aspnetcore</PackageTags>
+    <PackageProjectUrl>https://github.com/pskumar81/Calculator-Docker</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/pskumar81/Calculator-Docker</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Initial release of Calculator gRPC Server with support for basic arithmetic operations and gRPC-Web.</PackageReleaseNotes>
+    <Copyright>Copyright (c) 2025 Calculator Corp</Copyright>
+    
+    <!-- Include symbols and source -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSource>true</IncludeSource>
+    
+    <!-- Generate package on build -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

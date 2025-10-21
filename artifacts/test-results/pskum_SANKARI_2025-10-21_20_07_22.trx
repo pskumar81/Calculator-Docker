@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="7abf5c78-037d-4084-b9ef-1a272357d125" name="pskum@SANKARI 2025-10-21 20:07:22" runUser="SANKARI\pskum" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-10-21T20:07:22.1447603+05:30" queuing="2025-10-21T20:07:22.1447608+05:30" start="2025-10-21T20:07:19.8116345+05:30" finish="2025-10-21T20:07:22.2912188+05:30" />
+  <TestSettings name="default" id="3b0f8169-ffd6-47e0-adcf-70c95fc5584b">
+    <Deployment runDeploymentRoot="pskum_SANKARI_2025-10-21_20_07_22" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="244b0d23-194d-4fc6-b403-99361917d9c6" testId="0f0c3fd0-1049-4b77-a3ba-f63ef8b5dafe" testName="Calculator.Tests.UnitTest1.Test1" computerName="SANKARI" duration="00:00:00.1881815" startTime="2025-10-21T20:07:21.7325326+05:30" endTime="2025-10-21T20:07:21.7325611+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="244b0d23-194d-4fc6-b403-99361917d9c6" />
+    <UnitTestResult executionId="54449b84-d0f7-40a7-88b0-6781243dfe22" testId="ad093216-5b02-48ad-38d9-2236e858dcbf" testName="Calculator.Tests.CalculatorServiceTests.Subtract_ReturnsCorrectDifference" computerName="SANKARI" duration="00:00:00.0010659" startTime="2025-10-21T20:07:22.2430189+05:30" endTime="2025-10-21T20:07:22.2430196+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="54449b84-d0f7-40a7-88b0-6781243dfe22" />
+    <UnitTestResult executionId="8bee0cd8-103f-419d-adc3-f31d252e1424" testId="0cfd30f8-99f9-a01e-781a-7909fa4bb0de" testName="Calculator.Tests.CalculatorServiceTests.Multiply_ReturnsCorrectProduct" computerName="SANKARI" duration="00:00:00.0003384" startTime="2025-10-21T20:07:22.2441888+05:30" endTime="2025-10-21T20:07:22.2441890+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8bee0cd8-103f-419d-adc3-f31d252e1424" />
+    <UnitTestResult executionId="22d6f5ae-3b33-42b3-801e-4a8d3cb7db5e" testId="2475dc2c-fa2b-26a1-0fbf-aad0dc9b3fe2" testName="Calculator.Tests.CalculatorServiceTests.Divide_ByZero_ThrowsRpcException" computerName="SANKARI" duration="00:00:00.0042164" startTime="2025-10-21T20:07:22.2400044+05:30" endTime="2025-10-21T20:07:22.2400049+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="22d6f5ae-3b33-42b3-801e-4a8d3cb7db5e" />
+    <UnitTestResult executionId="7198901e-d80e-46d8-b548-c1606e296a09" testId="62a857d1-f08e-311a-a1d3-ba4f5cd741d4" testName="Calculator.Tests.CalculatorServiceTests.Add_TwoPositiveNumbers_ReturnsCorrectSum" computerName="SANKARI" duration="00:00:00.0002650" startTime="2025-10-21T20:07:22.2437976+05:30" endTime="2025-10-21T20:07:22.2437979+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7198901e-d80e-46d8-b548-c1606e296a09" />
+    <UnitTestResult executionId="83b4f16d-5b56-4b21-bcf3-06ea898231ca" testId="00d5a17f-7879-abca-b6f1-cc30f2e0c51b" testName="Calculator.Tests.CalculatorServiceTests.Divide_ReturnsCorrectQuotient" computerName="SANKARI" duration="00:00:00.0004319" startTime="2025-10-21T20:07:22.2434612+05:30" endTime="2025-10-21T20:07:22.2434615+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="83b4f16d-5b56-4b21-bcf3-06ea898231ca" />
+    <UnitTestResult executionId="9c81281f-3430-4dbc-bd81-667ddad4d96d" testId="9fec0bd6-0bda-8cba-db9f-8ea342ed33ef" testName="Calculator.Tests.CalculatorServiceTests.Add_NegativeNumbers_ReturnsCorrectSum" computerName="SANKARI" duration="00:00:00.6960537" startTime="2025-10-21T20:07:22.2357455+05:30" endTime="2025-10-21T20:07:22.2357460+05:30" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9c81281f-3430-4dbc-bd81-667ddad4d96d" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Calculator.Tests.CalculatorServiceTests.Divide_ByZero_ThrowsRpcException" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="2475dc2c-fa2b-26a1-0fbf-aad0dc9b3fe2">
+      <Execution id="22d6f5ae-3b33-42b3-801e-4a8d3cb7db5e" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.CalculatorServiceTests" name="Divide_ByZero_ThrowsRpcException" />
+    </UnitTest>
+    <UnitTest name="Calculator.Tests.UnitTest1.Test1" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="0f0c3fd0-1049-4b77-a3ba-f63ef8b5dafe">
+      <Execution id="244b0d23-194d-4fc6-b403-99361917d9c6" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="Calculator.Tests.CalculatorServiceTests.Divide_ReturnsCorrectQuotient" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="00d5a17f-7879-abca-b6f1-cc30f2e0c51b">
+      <Execution id="83b4f16d-5b56-4b21-bcf3-06ea898231ca" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.CalculatorServiceTests" name="Divide_ReturnsCorrectQuotient" />
+    </UnitTest>
+    <UnitTest name="Calculator.Tests.CalculatorServiceTests.Subtract_ReturnsCorrectDifference" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="ad093216-5b02-48ad-38d9-2236e858dcbf">
+      <Execution id="54449b84-d0f7-40a7-88b0-6781243dfe22" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.CalculatorServiceTests" name="Subtract_ReturnsCorrectDifference" />
+    </UnitTest>
+    <UnitTest name="Calculator.Tests.CalculatorServiceTests.Add_NegativeNumbers_ReturnsCorrectSum" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="9fec0bd6-0bda-8cba-db9f-8ea342ed33ef">
+      <Execution id="9c81281f-3430-4dbc-bd81-667ddad4d96d" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.CalculatorServiceTests" name="Add_NegativeNumbers_ReturnsCorrectSum" />
+    </UnitTest>
+    <UnitTest name="Calculator.Tests.CalculatorServiceTests.Multiply_ReturnsCorrectProduct" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="0cfd30f8-99f9-a01e-781a-7909fa4bb0de">
+      <Execution id="8bee0cd8-103f-419d-adc3-f31d252e1424" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.CalculatorServiceTests" name="Multiply_ReturnsCorrectProduct" />
+    </UnitTest>
+    <UnitTest name="Calculator.Tests.CalculatorServiceTests.Add_TwoPositiveNumbers_ReturnsCorrectSum" storage="c:\temp\calculator-docker\calculator.tests\bin\release\net9.0\calculator.tests.dll" id="62a857d1-f08e-311a-a1d3-ba4f5cd741d4">
+      <Execution id="7198901e-d80e-46d8-b548-c1606e296a09" />
+      <TestMethod codeBase="C:\Temp\Calculator-Docker\Calculator.Tests\bin\Release\net9.0\Calculator.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Calculator.Tests.CalculatorServiceTests" name="Add_TwoPositiveNumbers_ReturnsCorrectSum" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="0f0c3fd0-1049-4b77-a3ba-f63ef8b5dafe" executionId="244b0d23-194d-4fc6-b403-99361917d9c6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ad093216-5b02-48ad-38d9-2236e858dcbf" executionId="54449b84-d0f7-40a7-88b0-6781243dfe22" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0cfd30f8-99f9-a01e-781a-7909fa4bb0de" executionId="8bee0cd8-103f-419d-adc3-f31d252e1424" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2475dc2c-fa2b-26a1-0fbf-aad0dc9b3fe2" executionId="22d6f5ae-3b33-42b3-801e-4a8d3cb7db5e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="62a857d1-f08e-311a-a1d3-ba4f5cd741d4" executionId="7198901e-d80e-46d8-b548-c1606e296a09" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="00d5a17f-7879-abca-b6f1-cc30f2e0c51b" executionId="83b4f16d-5b56-4b21-bcf3-06ea898231ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9fec0bd6-0bda-8cba-db9f-8ea342ed33ef" executionId="9c81281f-3430-4dbc-bd81-667ddad4d96d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="7" executed="7" passed="7" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.8)&#xD;
+[xUnit.net 00:00:00.85]   Discovering: Calculator.Tests&#xD;
+[xUnit.net 00:00:00.88]   Discovered:  Calculator.Tests&#xD;
+[xUnit.net 00:00:00.88]   Starting:    Calculator.Tests&#xD;
+[xUnit.net 00:00:01.61]   Finished:    Calculator.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

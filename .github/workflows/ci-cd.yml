@@ -11,38 +11,22 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  # Job 1: Build and Test .NET Server
-  test-dotnet:
+  # Job 1: Build and Test with Cake
+  build-and-test:
     runs-on: ubuntu-latest
-    name: Test .NET Server
+    name: Build and Test with Cake
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+      with:
+        fetch-depth: 0
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
         
-    - name: Restore dependencies
-      run: dotnet restore Calculator.sln
-      
-    - name: Build
-      run: dotnet build Calculator.sln --no-restore --configuration Release
-      
-    - name: Run tests
-      run: dotnet test Calculator.Tests/Calculator.Tests.csproj --no-build --configuration Release --verbosity normal
-
-  # Job 2: Build and Test Angular Web Client
-  test-angular:
-    runs-on: ubuntu-latest
-    name: Test Angular Web Client
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -50,27 +34,30 @@ jobs:
         cache: 'npm'
         cache-dependency-path: Calculator.Web/package-lock.json
         
-    - name: Install dependencies
-      run: |
-        cd Calculator.Web
-        npm ci
+    - name: Restore .NET tools
+      run: dotnet tool restore
+      
+    - name: Run Cake CI pipeline
+      run: dotnet cake build.cake --target=CI --configuration=Release
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: artifacts/test-results/
         
-    - name: Build Angular app
-      run: |
-        cd Calculator.Web
-        npm run build
-        
-    - name: Upload Angular build artifacts
+    - name: Upload packages
       uses: actions/upload-artifact@v4
       with:
-        name: angular-build
-        path: Calculator.Web/dist/
+        name: packages
+        path: artifacts/packages/
 
-  # Job 3: Build Docker Images
+  # Job 2: Build Docker Images
   build-docker:
     runs-on: ubuntu-latest
     name: Build Docker Images
-    needs: [test-dotnet, test-angular]
+    needs: build-and-test
     permissions:
       contents: read
       packages: write

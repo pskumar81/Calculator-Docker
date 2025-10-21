@@ -1,78 +1,129 @@
-# Calculator Web Client
+# Calculator Angular Web Client
 
-This is an Angular web client that consumes the gRPC Calculator service.
+A modern Angular web client for the Calculator gRPC Service. This package provides a complete web interface for performing arithmetic operations through gRPC-Web protocol.
 
 ## Features
 
-- **Two Input Fields**: Enter two numbers for calculation
-- **Four Operations**: Add, Subtract, Multiply, and Divide
-- **Submit Button**: Performs the selected operation
-- **Clear Button**: Clears all input fields and results
-- **Result Display**: Shows the calculation result
-- **Error Handling**: Displays errors for invalid operations (e.g., division by zero)
-- **Loading State**: Shows loading indicator during calculations
+- ✅ **Modern Angular 17** application with TypeScript
+- ✅ **gRPC-Web Integration** for browser-compatible gRPC communication
+- ✅ **Responsive Design** that works on desktop and mobile
+- ✅ **Real-time Validation** with user-friendly error handling
+- ✅ **Arithmetic Operations**: Add, Subtract, Multiply, Divide
+- ✅ **Clean UI** with Material Design principles
 
-## Getting Started
+## Installation
 
-### Running with Docker (Recommended)
-
-1. Build and run the entire application stack:
-   ```bash
-   docker-compose up --build
-   ```
-
-2. Access the web client at: http://localhost:4200
-3. The gRPC server will be running at: http://localhost:5001
-
-### Running Locally (Development)
-
-1. Install Node.js dependencies:
-   ```bash
-   cd Calculator.Web
-   npm install
-   ```
-
-2. Start the development server:
-   ```bash
-   npm start
-   ```
-
-3. Make sure the Calculator.Server is running on http://localhost:5001
+```bash
+npm install @calculator/web-client
+```
 
 ## Usage
 
-1. Open the web application in your browser
-2. Enter the first number in the "First Number" field
-3. Enter the second number in the "Second Number" field
-4. Click one of the operation buttons:
-   - **Add (+)**: Adds the two numbers
-   - **Subtract (-)**: Subtracts the second number from the first
-   - **Multiply (×)**: Multiplies the two numbers
-   - **Divide (÷)**: Divides the first number by the second
-5. View the result in the result section
-6. Use the **Clear** button to reset all fields
+### Development Server
 
-## Architecture
+```bash
+npm start
+```
 
-- **Angular 17**: Frontend framework
-- **gRPC-Web**: Protocol for browser-to-server communication
-- **TypeScript**: Type-safe development
-- **Reactive Forms**: For form handling and validation
-- **RxJS**: For reactive programming and async operations
+Navigate to `http://localhost:4200/` to use the calculator.
 
-## gRPC-Web Integration
+### Production Build
 
-The web client communicates with the .NET gRPC server using gRPC-Web protocol, which allows browsers to make gRPC calls. The server has been configured to support both HTTP/1.1 and HTTP/2 protocols with CORS enabled.
+```bash
+npm run build:prod
+```
 
-## Error Handling
+The build artifacts will be stored in the `dist/` directory.
 
-- Input validation ensures both fields contain valid numbers
-- Division by zero is handled gracefully
-- Network errors are caught and displayed to the user
-- Fallback mock calculations are provided for demonstration
+### Docker Deployment
 
-## Development Notes
+```bash
+docker build -t calculator-web .
+docker run -p 4200:80 calculator-web
+```
 
-- The TypeScript proto files are manually created for this demo
-- In a production environment, use protoc with grpc-web plugin to generate client code
-- The service includes fallback mock calculations for offline development
+## Configuration
+
+The web client expects the gRPC server to be running on `http://localhost:5001` by default. You can configure this by modifying the `serverUrl` in the calculator service.
+
+## API
+
+The web client communicates with the Calculator gRPC Server using the following operations:
+
+- **Add**: Adds two numbers
+- **Subtract**: Subtracts the second number from the first
+- **Multiply**: Multiplies two numbers
+- **Divide**: Divides the first number by the second (with division by zero protection)
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Dependencies
+
+### Runtime Dependencies
+- `@angular/core`: Angular framework
+- `@angular/forms`: Reactive forms support
+- `grpc-web`: gRPC-Web client library
+- `google-protobuf`: Protocol Buffers support
+
+### Development Dependencies
+- `@angular/cli`: Angular CLI
+- `typescript`: TypeScript compiler
+- `@angular-devkit/build-angular`: Angular build system
+
+## Development
+
+### Prerequisites
+- Node.js 18+
+- npm 8+
+
+### Setup
+```bash
+git clone https://github.com/pskumar81/Calculator-Docker.git
+cd Calculator-Docker/Calculator.Web
+npm install
+npm start
+```
+
+### Testing
+```bash
+npm test
+npm run test:ci  # For CI environment
+```
+
+### Building
+```bash
+npm run build:prod
+```
+
+## Docker Support
+
+The package includes Docker support for containerized deployment:
+
+```dockerfile
+FROM nginx:alpine
+COPY dist/calculator-web /usr/share/nginx/html
+EXPOSE 80
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+MIT License - see the [LICENSE](https://github.com/pskumar81/Calculator-Docker/blob/master/LICENSE) file for details.
+
+## Support
+
+- 📚 [Documentation](https://github.com/pskumar81/Calculator-Docker)
+- 🐛 [Issues](https://github.com/pskumar81/Calculator-Docker/issues)
+- 💬 [Discussions](https://github.com/pskumar81/Calculator-Docker/discussions)

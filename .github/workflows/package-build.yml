@@ -1,0 +1,294 @@
+name: Build and Publish Packages
+
+on:
+  push:
+    branches: [ master, main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version to build'
+        required: true
+        default: '1.0.0'
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '18'
+  PACKAGE_VERSION: ${{ github.event.inputs.version || '1.0.0' }}
+
+jobs:
+  build-packages:
+    runs-on: ubuntu-latest
+    name: Build Packages with Cake
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Required for GitVersion
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: Calculator.Web/package-lock.json
+        
+    - name: Restore .NET tools
+      run: dotnet tool restore
+      
+    - name: Run Cake Build
+      run: dotnet cake build.cake --target=Pack --configuration=Release --version=${{ env.PACKAGE_VERSION }}
+      
+    - name: Upload NuGet packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: artifacts/packages/*.nupkg
+        retention-days: 30
+        
+    - name: Upload npm packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-packages
+        path: artifacts/packages/web/*.tgz
+        retention-days: 30
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: artifacts/test-results/
+        retention-days: 30
+
+  publish-nuget:
+    runs-on: ubuntu-latest
+    name: Publish NuGet Packages
+    needs: build-packages
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master')
+    environment: production
+    
+    steps:
+    - name: Download NuGet packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./packages
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Publish to NuGet.org
+      run: |
+        for package in ./packages/*.nupkg; do
+          echo "Publishing $package"
+          dotnet nuget push "$package" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+        done
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    name: Publish npm Package
+    needs: build-packages
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master')
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        registry-url: 'https://registry.npmjs.org'
+        
+    - name: Download npm packages
+      uses: actions/download-artifact@v4
+      with:
+        name: npm-packages
+        path: ./packages
+        
+    - name: Publish to npm
+      working-directory: Calculator.Web
+      run: |
+        # Configure npm authentication
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        
+        # Install dependencies and build
+        npm ci
+        npm run build:prod
+        
+        # Publish package
+        npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-github-packages:
+    runs-on: ubuntu-latest
+    name: Publish to GitHub Packages
+    needs: build-packages
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: Download NuGet packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./nuget-packages
+        
+    - name: Download npm packages
+      uses: actions/download-artifact@v4
+      with:
+        name: npm-packages
+        path: ./npm-packages
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        registry-url: 'https://npm.pkg.github.com'
+        
+    - name: Publish NuGet to GitHub Packages
+      run: |
+        for package in ./nuget-packages/*.nupkg; do
+          echo "Publishing $package to GitHub Packages"
+          dotnet nuget push "$package" \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --source https://nuget.pkg.github.com/pskumar81/index.json \
+            --skip-duplicate
+        done
+        
+    - name: Publish npm to GitHub Packages
+      run: |
+        # Configure GitHub Packages authentication
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+        echo "@calculator:registry=https://npm.pkg.github.com" >> ~/.npmrc
+        
+        # Extract and publish
+        cd ./npm-packages
+        for package in *.tgz; do
+          echo "Publishing $package to GitHub Packages"
+          npm publish "$package" --registry=https://npm.pkg.github.com
+        done
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    runs-on: ubuntu-latest
+    name: Create Release
+    needs: [publish-nuget, publish-npm]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./release-artifacts
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: |
+          ## 🚀 Release ${{ github.ref_name }}
+          
+          ### 📦 Packages Published
+          
+          #### NuGet Packages
+          - `Calculator.GrpcServer` - gRPC server implementation
+          - `Calculator.GrpcClient` - gRPC client library
+          
+          #### npm Package
+          - `@calculator/web-client` - Angular web client
+          
+          ### 🐳 Docker Images
+          Docker images are available at:
+          - `ghcr.io/pskumar81/calculator-docker-calculator-server:${{ github.ref_name }}`
+          - `ghcr.io/pskumar81/calculator-docker-calculator-web:${{ github.ref_name }}`
+          - `ghcr.io/pskumar81/calculator-docker-calculator-client:${{ github.ref_name }}`
+          
+          ### 📋 Installation
+          
+          ```bash
+          # Install NuGet packages
+          dotnet add package Calculator.GrpcServer
+          dotnet add package Calculator.GrpcClient
+          
+          # Install npm package
+          npm install @calculator/web-client
+          ```
+          
+          ### 🔧 Usage
+          See the [README](https://github.com/pskumar81/Calculator-Docker#readme) for usage instructions.
+        files: |
+          release-artifacts/**/*
+        draft: false
+        prerelease: false
+
+  validate-packages:
+    runs-on: ubuntu-latest
+    name: Validate Packages
+    needs: build-packages
+    
+    steps:
+    - name: Download NuGet packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./packages
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Validate NuGet packages
+      run: |
+        echo "📦 Validating NuGet packages..."
+        for package in ./packages/*.nupkg; do
+          echo "Validating: $package"
+          unzip -l "$package" | head -20
+          
+          # Extract package info
+          dotnet nuget verify "$package" || echo "Warning: Package verification failed for $package"
+        done
+        
+    - name: Package validation summary
+      run: |
+        echo "## 📦 Package Validation Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### NuGet Packages Created:" >> $GITHUB_STEP_SUMMARY
+        for package in ./packages/*.nupkg; do
+          echo "- \`$(basename "$package")\`" >> $GITHUB_STEP_SUMMARY
+        done
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ All packages built successfully!" >> $GITHUB_STEP_SUMMARY

@@ -1,15 +1,45 @@
 {
-  "name": "calculator-web",
+  "name": "@calculator/web-client",
   "version": "1.0.0",
+  "description": "A modern Angular web client for Calculator gRPC Service with support for arithmetic operations via gRPC-Web protocol",
+  "author": "Calculator Team <team@calculator.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/pskumar81/Calculator-Docker#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pskumar81/Calculator-Docker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pskumar81/Calculator-Docker/issues"
+  },
+  "keywords": [
+    "angular",
+    "calculator",
+    "grpc",
+    "grpc-web",
+    "arithmetic",
+    "typescript",
+    "web-client"
+  ],
+  "main": "dist/calculator-web/main.js",
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "README.md"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve": "ng serve --host 0.0.0.0 --port 4200"
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
+    "lint": "ng lint",
+    "serve": "ng serve --host 0.0.0.0 --port 4200",
+    "package": "npm run build:prod && npm pack"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/common": "^17.0.0",

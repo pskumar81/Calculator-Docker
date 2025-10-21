@@ -1,10 +1,20 @@
 # Calculator gRPC Service
 
 [![CI/CD Pipeline](https://github.com/pskumar81/Calculator-Docker/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/ci-cd.yml)
+[![Package Build](https://github.com/pskumar81/Calculator-Docker/actions/workflows/package-build.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/package-build.yml)
 [![Pull Request Validation](https://github.com/pskumar81/Calculator-Docker/actions/workflows/pr-validation.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/pr-validation.yml)
 [![Code Quality](https://github.com/pskumar81/Calculator-Docker/actions/workflows/code-quality.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/code-quality.yml)
 
-A modern calculator implementation using gRPC for service communication in .NET 9.0. This project demonstrates how to build a distributed calculator service with client-server architecture using gRPC, now with Docker support for easy deployment and a web client interface.
+A modern calculator implementation using gRPC for service communication in .NET 9.0. This project demonstrates how to build a distributed calculator service with client-server architecture using gRPC, containerized with Docker, and packaged as reusable NuGet and npm packages using Cake build system.
+
+## 📦 NuGet Packages
+
+- **Calculator.Server** - gRPC server library and service implementation
+- **Calculator.Client** - gRPC client library for consuming calculator services
+
+## 📦 npm Packages
+
+- **@calculator/web** - Angular web client library for calculator services
 
 ## Project Structure
 
@@ -14,6 +24,7 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Uses logging for operation tracking
   - Containerized with Docker
   - Supports gRPC-Web for browser compatibility
+  - **Available as NuGet package**
 
 - **Calculator.Client**: Console application that connects to the gRPC server
   - Demonstrates how to make gRPC calls to the server
@@ -22,6 +33,7 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Handles server responses and errors
   - Containerized with Docker
   - Configurable server connection through environment variables
+  - **Available as NuGet package**
 
 - **Calculator.Web**: Angular web client application
   - Modern web interface for the calculator service
@@ -31,6 +43,7 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Real-time result display with error handling
   - Responsive design with clean UI
   - Uses gRPC-Web to communicate with the server
+  - **Available as npm package**
 
 - **Calculator.Tests**: Unit tests for the calculator service
   - Tests all arithmetic operations
@@ -42,6 +55,34 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Docker Compose for orchestration
   - Isolated network for service communication
   - Web client served via Nginx
+
+## 🛠️ Build System
+
+This project uses **Cake (C# Make)** for cross-platform build automation:
+
+- **build.cake**: Main build script with all build tasks
+- **build.ps1**: PowerShell bootstrap script for Windows
+- **build.sh**: Bash bootstrap script for Linux/macOS
+- **dotnet-tools.json**: .NET tool configuration for Cake
+
+### Available Build Targets
+
+```bash
+# Build everything
+dotnet cake --target=Build
+
+# Run tests
+dotnet cake --target=Test
+
+# Create packages
+dotnet cake --target=Pack
+
+# Full CI pipeline (clean, build, test, pack)
+dotnet cake --target=CI
+
+# Publish packages to NuGet and npm
+dotnet cake --target=Publish
+```
 
 ## Features
 
@@ -109,6 +150,98 @@ The services will be available at:
    cd Calculator.Client
    dotnet run
    ```
+
+## 📦 Using the Packages
+
+### Using the NuGet Packages
+
+#### Calculator.Server Package
+```bash
+dotnet add package Calculator.Server
+```
+
+```csharp
+using Calculator.Server.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add gRPC services
+builder.Services.AddGrpc();
+builder.Services.AddGrpcReflection();
+
+// Configure Kestrel for HTTP/2
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.ListenAnyIP(5001, o => o.Protocols = HttpProtocols.Http2);
+});
+
+var app = builder.Build();
+
+// Configure gRPC pipeline
+app.MapGrpcService<CalculatorService>();
+app.MapGrpcReflectionService();
+
+app.Run();
+```
+
+#### Calculator.Client Package
+```bash
+dotnet add package Calculator.Client
+```
+
+```csharp
+using Calculator.Client.Services;
+using Grpc.Net.Client;
+
+var services = new ServiceCollection();
+services.AddCalculatorClient("https://localhost:5001");
+
+var serviceProvider = services.BuildServiceProvider();
+var calculatorClient = serviceProvider.GetRequiredService<ICalculatorClientService>();
+
+var result = await calculatorClient.AddAsync(5, 3);
+Console.WriteLine($"5 + 3 = {result}");
+```
+
+### Using the npm Package
+
+#### @calculator/web Package
+```bash
+npm install @calculator/web
+```
+
+```typescript
+import { CalculatorService } from '@calculator/web';
+
+export class AppComponent {
+  constructor(private calculatorService: CalculatorService) {}
+  
+  async calculate(a: number, b: number, operation: string) {
+    switch(operation) {
+      case 'add':
+        return await this.calculatorService.add(a, b);
+      case 'subtract':
+        return await this.calculatorService.subtract(a, b);
+      // ... other operations
+    }
+  }
+}
+```
+
+Add to your Angular module:
+```typescript
+import { CalculatorModule } from '@calculator/web';
+
+@NgModule({
+  imports: [
+    CalculatorModule.forRoot({
+      serverUrl: 'https://localhost:5001'
+    })
+  ]
+})
+export class AppModule { }
+```
 
 ## Testing
 
