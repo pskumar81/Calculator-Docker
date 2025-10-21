@@ -1,6 +1,6 @@
 # Calculator gRPC Service
 
-A modern calculator implementation using gRPC for service communication in .NET 9.0. This project demonstrates how to build a distributed calculator service with client-server architecture using gRPC, now with Docker support for easy deployment.
+A modern calculator implementation using gRPC for service communication in .NET 9.0. This project demonstrates how to build a distributed calculator service with client-server architecture using gRPC, now with Docker support for easy deployment and a web client interface.
 
 ## Project Structure
 
@@ -9,6 +9,7 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Includes input validation and error handling
   - Uses logging for operation tracking
   - Containerized with Docker
+  - Supports gRPC-Web for browser compatibility
 
 - **Calculator.Client**: Console application that connects to the gRPC server
   - Demonstrates how to make gRPC calls to the server
@@ -17,6 +18,15 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Handles server responses and errors
   - Containerized with Docker
   - Configurable server connection through environment variables
+
+- **Calculator.Web**: Angular web client application
+  - Modern web interface for the calculator service
+  - Two input fields for numbers
+  - Operation buttons (Add, Subtract, Multiply, Divide)
+  - Submit and Clear functionality
+  - Real-time result display with error handling
+  - Responsive design with clean UI
+  - Uses gRPC-Web to communicate with the server
 
 - **Calculator.Tests**: Unit tests for the calculator service
   - Tests all arithmetic operations
@@ -27,6 +37,7 @@ A modern calculator implementation using gRPC for service communication in .NET 
   - Multi-stage builds for optimal image size
   - Docker Compose for orchestration
   - Isolated network for service communication
+  - Web client served via Nginx
 
 ## Features
 
@@ -34,18 +45,23 @@ A modern calculator implementation using gRPC for service communication in .NET 
 - **Subtract Operation**: Subtracts two numbers
 - **Multiply Operation**: Multiplies two numbers
 - **Divide Operation**: Divides two numbers (includes division by zero validation)
+- **Web Interface**: User-friendly Angular web application
+- **Real-time Validation**: Input validation and error handling
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## Technical Details
 
 - Built with .NET 9.0
 - Uses gRPC for service communication over HTTP/2
+- gRPC-Web support for browser compatibility
+- Angular 17 frontend with TypeScript
 - Implements async/await pattern
 - Implements Dependency Injection (DI) principles
 - Includes comprehensive logging with Microsoft.Extensions.Logging
 - Follows IoC principles for better maintainability and testing
 - Includes proper error handling and logging
 - Certificate generation tools for secure communication
-- Follows C# best practices
+- Follows C# and Angular best practices
 
 ## Getting Started
 
@@ -62,8 +78,9 @@ A modern calculator implementation using gRPC for service communication in .NET 
    ```
 
 The services will be available at:
-- Server: http://localhost:5001
-- Client: Automatically connects to the server through Docker network
+- **gRPC Server**: http://localhost:5001
+- **Web Client**: http://localhost:4200
+- **Console Client**: Automatically connects to the server through Docker network
 
 ### Running Locally (Alternative)
 

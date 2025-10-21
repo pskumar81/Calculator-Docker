@@ -26,6 +26,17 @@ services:
     networks:
       - calculator-network
 
+  calculator-web:
+    build:
+      context: .
+      dockerfile: Calculator.Web/Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - calculator-server
+    networks:
+      - calculator-network
+
 networks:
   calculator-network:
     driver: bridge
