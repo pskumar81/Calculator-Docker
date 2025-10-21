@@ -1,5 +1,9 @@
 # Calculator gRPC Service
 
+[![CI/CD Pipeline](https://github.com/pskumar81/Calculator-Docker/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/ci-cd.yml)
+[![Pull Request Validation](https://github.com/pskumar81/Calculator-Docker/actions/workflows/pr-validation.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/pr-validation.yml)
+[![Code Quality](https://github.com/pskumar81/Calculator-Docker/actions/workflows/code-quality.yml/badge.svg)](https://github.com/pskumar81/Calculator-Docker/actions/workflows/code-quality.yml)
+
 A modern calculator implementation using gRPC for service communication in .NET 9.0. This project demonstrates how to build a distributed calculator service with client-server architecture using gRPC, now with Docker support for easy deployment and a web client interface.
 
 ## Project Structure
@@ -167,6 +171,32 @@ docker-compose down
 - All operations are logged for monitoring and debugging
 - Client handles server errors gracefully
 - Docker containerization ensures consistent environment
+
+## CI/CD Pipeline
+
+This project includes a comprehensive GitHub Actions CI/CD pipeline with the following features:
+
+### 🔄 **Automated Workflows**
+- **CI/CD Pipeline**: Builds, tests, and deploys on every push to master
+- **Pull Request Validation**: Quick validation for PRs
+- **Code Quality Analysis**: CodeQL security scanning and SonarCloud analysis
+- **Automated Releases**: Version tagging and Docker image publishing
+- **Dependency Updates**: Automated dependency updates via Dependabot
+
+### 🐳 **Container Registry**
+Docker images are automatically built and published to GitHub Container Registry:
+- `ghcr.io/pskumar81/calculator-docker-calculator-server`
+- `ghcr.io/pskumar81/calculator-docker-calculator-web`
+- `ghcr.io/pskumar81/calculator-docker-calculator-client`
+
+### 🛡️ **Security & Quality**
+- CodeQL security analysis for C# and JavaScript
+- Docker image vulnerability scanning with Trivy
+- Dockerfile linting with Hadolint
+- Automated dependency security updates
+
+### 📋 **Workflow Status**
+All workflow statuses are displayed via badges at the top of this README. For detailed information, see [`.github/WORKFLOWS.md`](.github/WORKFLOWS.md).
 
 ## Contributing
 

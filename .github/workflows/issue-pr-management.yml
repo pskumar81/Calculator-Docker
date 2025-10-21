@@ -1,0 +1,137 @@
+name: Issue and PR Management
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened, closed, merged]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened'
+    
+    steps:
+    - name: Welcome new contributor
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const isFirstTime = context.payload.sender.type !== 'User' || 
+                             context.payload.sender.contributions === undefined;
+          
+          if (context.eventName === 'issues') {
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `👋 Thanks for opening this issue! 
+              
+              Please make sure to:
+              - [ ] Provide clear steps to reproduce the issue
+              - [ ] Include relevant error messages
+              - [ ] Specify your environment (OS, Docker version, etc.)
+              
+              A maintainer will review this issue soon.`
+            });
+          } else if (context.eventName === 'pull_request') {
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🎉 Thanks for your contribution! 
+              
+              Your PR will be automatically tested by our CI/CD pipeline. Please ensure:
+              - [ ] All tests pass
+              - [ ] Code follows project conventions
+              - [ ] Documentation is updated if needed
+              
+              A maintainer will review your changes soon.`
+            });
+          }
+
+  label-pr:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event_name == 'pull_request'
+    
+    steps:
+    - name: Auto-label PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: files } = await github.rest.pulls.listFiles({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+          });
+          
+          const labels = new Set();
+          
+          files.forEach(file => {
+            if (file.filename.includes('Calculator.Server/')) {
+              labels.add('server');
+            }
+            if (file.filename.includes('Calculator.Client/')) {
+              labels.add('client');
+            }
+            if (file.filename.includes('Calculator.Web/')) {
+              labels.add('web');
+            }
+            if (file.filename.includes('Calculator.Tests/')) {
+              labels.add('tests');
+            }
+            if (file.filename.includes('.github/')) {
+              labels.add('ci/cd');
+            }
+            if (file.filename.includes('Dockerfile') || file.filename.includes('docker-compose')) {
+              labels.add('docker');
+            }
+            if (file.filename.includes('README') || file.filename.includes('.md')) {
+              labels.add('documentation');
+            }
+          });
+          
+          if (labels.size > 0) {
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: Array.from(labels),
+            });
+          }
+
+  merge-celebration:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    
+    steps:
+    - name: Celebrate merge
+      uses: actions/github-script@v7
+      with:
+        script: |
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `🎉 Congratulations! Your pull request has been merged. 
+            
+            Thank you for contributing to the Calculator gRPC Service project! 🚀
+            
+            Your changes will be included in the next release.`
+          });
+
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event_name == 'pull_request'
+    
+    steps:
+    - name: Auto-assign reviewers
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // Auto-assign the repository owner as reviewer
+          await github.rest.pulls.requestReviewers({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+            reviewers: ['pskumar81'], // Replace with actual maintainer usernames
+          });
