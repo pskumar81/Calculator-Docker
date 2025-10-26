@@ -33,3 +33,41 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+# Cake Tools and Build Tools
+tools/**
+!tools/packages.config
+
+# Test Results
+[Tt]est[Rr]esult*/
+TestResults/
+*.trx
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+
+# Visual Studio Code
+.vscode/
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Publish outputs
+publish/
+*.azurePubxml
+*.[Pp]ublish.xml
+
+# Others
+*.cache
+*.log
+*.tmp
+*~
