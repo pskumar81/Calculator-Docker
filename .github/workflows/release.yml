@@ -46,7 +46,7 @@ jobs:
       uses: docker/setup-buildx-action@v3
       
     - name: Build and push Calculator Server
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./Calculator.Server/Dockerfile
@@ -58,7 +58,7 @@ jobs:
         cache-to: type=gha,mode=max
         
     - name: Build and push Calculator Web
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./Calculator.Web/Dockerfile
@@ -70,7 +70,7 @@ jobs:
         cache-to: type=gha,mode=max
         
     - name: Build and push Calculator Client
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./Calculator.Client/Dockerfile
