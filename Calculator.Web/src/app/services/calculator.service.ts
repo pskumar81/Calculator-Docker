@@ -14,7 +14,7 @@ export interface CalculateReply {
   providedIn: 'root'
 })
 export class CalculatorService {
-  private readonly serverUrl = 'http://localhost:5001';
+  private readonly serverUrl = 'http://localhost:5002';
 
   constructor() {}
 

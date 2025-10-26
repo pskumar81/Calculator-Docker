@@ -44,7 +44,7 @@ docker run -p 4200:80 calculator-web
 
 ## Configuration
 
-The web client expects the gRPC server to be running on `http://localhost:5001` by default. You can configure this by modifying the `serverUrl` in the calculator service.
+The web client expects the gRPC server to be running on `http://localhost:5002` by default. You can configure this by modifying the `serverUrl` in the calculator service.
 
 ## API
 
