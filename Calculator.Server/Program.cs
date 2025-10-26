@@ -6,15 +6,6 @@ using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel to support both HTTP/1.1 and HTTP/2 for gRPC-Web
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(5001, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-    });
-});
-
 // Add services to the container.
 builder.Services.AddCalculatorServices();
 

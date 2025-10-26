@@ -46,4 +46,10 @@
     <Protobuf Include="Protos\calculator.proto" GrpcServices="Client" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -1,13 +1,31 @@
 using Calculator.Client.Extensions;
 using Calculator.Client.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 var host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        config.SetBasePath(AppContext.BaseDirectory)
+              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+              .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true)
+              .AddEnvironmentVariables();
+    })
     .ConfigureServices((context, services) =>
     {
-        var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") ?? "http://localhost:5001";
+        var serverUrl = Environment.GetEnvironmentVariable("SERVER_URL") 
+                       ?? context.Configuration["CalculatorService:ServerUrl"];
+        
+        if (string.IsNullOrEmpty(serverUrl))
+        {
+            throw new InvalidOperationException(
+                "Server URL not configured. Please set either:" +
+                "\n1. Environment variable 'SERVER_URL', or" +
+                "\n2. Configuration 'CalculatorService:ServerUrl' in appsettings.json");
+        }
+        
         services.AddCalculatorClient(serverUrl);
     })
     .Build();
