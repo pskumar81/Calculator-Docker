@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  calculator-server:
+    build:
+      context: .
+      dockerfile: Calculator.Server/Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
+      - AZURE_VM_NAME=${AZURE_SERVER_VM_NAME:-calculator-server-vm}
+      - AZURE_RESOURCE_GROUP=${AZURE_RESOURCE_GROUP:-calculator-grpc-rg}
+      - AZURE_REGION=${AZURE_REGION:-East US}
+      - AZURE_PRIVATE_IP=${AZURE_SERVER_PRIVATE_IP:-10.0.1.4}
+      - AZURE_PUBLIC_DNS=${AZURE_SERVER_PUBLIC_DNS:-calculator-server.eastus.cloudapp.azure.com}
+      - APPINSIGHTS_INSTRUMENTATIONKEY=${APPINSIGHTS_INSTRUMENTATIONKEY}
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - calculator-network
+
+  calculator-client:
+    build:
+      context: .
+      dockerfile: Calculator.Client/Dockerfile
+    depends_on:
+      calculator-server:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - AZURE_CLIENT_VM_NAME=${AZURE_CLIENT_VM_NAME:-calculator-client-vm}
+      - AZURE_RESOURCE_GROUP=${AZURE_RESOURCE_GROUP:-calculator-grpc-rg}
+      - AZURE_REGION=${AZURE_REGION:-East US}
+      - AZURE_CLIENT_PRIVATE_IP=${AZURE_CLIENT_PRIVATE_IP:-10.0.1.5}
+      - AZURE_CLIENT_PUBLIC_DNS=${AZURE_CLIENT_PUBLIC_DNS:-calculator-client.eastus.cloudapp.azure.com}
+      - AZURE_SERVER_PRIVATE_IP=${AZURE_SERVER_PRIVATE_IP:-10.0.1.4}
+      - AZURE_SERVER_PUBLIC_DNS=${AZURE_SERVER_PUBLIC_DNS:-calculator-server.eastus.cloudapp.azure.com}
+      - APPINSIGHTS_INSTRUMENTATIONKEY=${APPINSIGHTS_INSTRUMENTATIONKEY}
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    networks:
+      - calculator-network
+
+  calculator-web:
+    build:
+      context: .
+      dockerfile: Calculator.Web/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      calculator-server:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - CALCULATOR_SERVER_URL=http://calculator-server:5002
+    restart: unless-stopped
+    networks:
+      - calculator-network
+
+networks:
+  calculator-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  logs:

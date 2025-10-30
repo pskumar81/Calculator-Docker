@@ -14,5 +14,18 @@ RUN dotnet publish "Calculator.Client/Calculator.Client.csproj" -c Release -o /a
 
 FROM mcr.microsoft.com/dotnet/runtime:9.0 AS final
 WORKDIR /app
+
+# Create non-root user for security
+RUN groupadd -r calculator && useradd -r -g calculator calculator
+
+# Copy published app
 COPY --from=publish /app/publish .
+
+# Set ownership and permissions
+RUN chown -R calculator:calculator /app
+USER calculator
+
+# Configure environment for Azure
+ENV ASPNETCORE_ENVIRONMENT=Production
+
 ENTRYPOINT ["dotnet", "Calculator.Client.dll"]

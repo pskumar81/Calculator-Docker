@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceGroupName": {
+            "value": "calculator-grpc-rg"
+        },
+        "location": {
+            "value": "East US"
+        },
+        "serverVmName": {
+            "value": "calculator-server-vm"
+        },
+        "clientVmName": {
+            "value": "calculator-client-vm"
+        },
+        "adminUsername": {
+            "value": "azureuser"
+        },
+        "adminPassword": {
+            "value": "REPLACE_WITH_SECURE_PASSWORD"
+        },
+        "vmSize": {
+            "value": "Standard_B2s"
+        }
+    }
+}
