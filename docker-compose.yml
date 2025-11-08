@@ -12,8 +12,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5002
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
       - calculator-network
+    restart: unless-stopped
 
   calculator-client:
     image: calculator.grpc.client:latest
@@ -22,25 +29,34 @@ services:
       dockerfile: Calculator.Client/Dockerfile
     container_name: calculator-grpc-client
     depends_on:
-      - calculator-server
+      calculator-server:
+        condition: service_healthy
     environment:
-      - SERVER_URL=http://calculator-server:5002
+      - SERVER_URL=http://calculator-grpc-server:5002
+      - ASPNETCORE_ENVIRONMENT=Development
     stdin_open: true  # docker run -i
     tty: true        # docker run -t
     networks:
       - calculator-network
+    restart: no       # Don't restart client automatically
 
   calculator-web:
     build:
       context: .
       dockerfile: Calculator.Web/Dockerfile
+    container_name: calculator-grpc-web
     ports:
       - "4200:80"
     depends_on:
-      - calculator-server
+      calculator-server:
+        condition: service_healthy
+    environment:
+      - SERVER_URL=http://calculator-grpc-server:5002
     networks:
       - calculator-network
+    restart: unless-stopped
 
 networks:
   calculator-network:
+    name: calculator-grpc-network
     driver: bridge

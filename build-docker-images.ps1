@@ -31,9 +31,14 @@ Write-Host ""
 Write-Host "✅ Build completed successfully!" -ForegroundColor Green
 Write-Host ""
 Write-Host "📋 Created Images:" -ForegroundColor Cyan
-docker images | Select-String "Calculator.Grpc"
+docker images | Select-String "calculator.grpc"
 Write-Host ""
 
 Write-Host "🚀 Usage Commands:" -ForegroundColor Yellow
-Write-Host "  Server: docker run -d -p 5002:5002 --name calc-server $SERVER_IMAGE" -ForegroundColor White
-Write-Host "  Client: docker run -it --rm -e SERVER_URL=`"http://host.docker.internal:5002`" $CLIENT_IMAGE" -ForegroundColor White
+Write-Host "  Server: docker run -d -p 5002:5002 --name calculator-grpc-server $SERVER_IMAGE" -ForegroundColor White
+Write-Host "  Client: docker run -it --rm --name calculator-grpc-client -e SERVER_URL=`"http://host.docker.internal:5002`" $CLIENT_IMAGE" -ForegroundColor White
+Write-Host ""
+Write-Host "🐳 Container Management:" -ForegroundColor Cyan
+Write-Host "  Stop Server: docker stop calculator-grpc-server" -ForegroundColor White
+Write-Host "  Remove Server: docker rm calculator-grpc-server" -ForegroundColor White
+Write-Host "  View Logs: docker logs calculator-grpc-server" -ForegroundColor White
