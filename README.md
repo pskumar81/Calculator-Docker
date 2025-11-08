@@ -7,12 +7,22 @@
 
 A modern, production-ready calculator implementation using gRPC for service communication in .NET 9.0. This project demonstrates enterprise-grade distributed system architecture with client-server communication, containerization, cloud deployment, and comprehensive DevOps practices.
 
+## 🆕 **What's New** (November 2025)
+- **📤 Docker Hub Integration**: Images now published to [pskumar81/calculator-grpc-server](https://hub.docker.com/r/pskumar81/calculator-grpc-server) and [pskumar81/calculator-grpc-client](https://hub.docker.com/r/pskumar81/calculator-grpc-client)
+- **🎮 Container Management**: New `run-containers.ps1` script for complete container lifecycle management
+- **⚡ Quick Start**: Run directly from Docker Hub without building - just `docker run`
+- **🔄 Consistent Naming**: Standardized Docker image and container naming conventions
+- **🌐 Cross-Platform**: Enhanced PowerShell and Bash script support
+
 ## 🚀 **Key Features**
 
 - **gRPC Communication**: High-performance HTTP/2-based service communication
 - **Cloud-Ready**: Azure VM deployment with Infrastructure as Code (ARM templates & Terraform)
 - **Production Security**: Non-root Docker containers, health checks, proper error handling
 - **Consistent Naming**: Standardized Docker image naming (`calculator.grpc.server`, `calculator.grpc.client`)
+- **Docker Hub Integration**: Public images available at `pskumar81/calculator-grpc-server` and `pskumar81/calculator-grpc-client`
+- **Container Management**: Comprehensive lifecycle management with `run-containers.ps1` script
+- **Cross-Platform**: PowerShell and Bash scripts for Windows, Linux, and macOS
 - **Comprehensive Monitoring**: Application Insights integration and structured logging
 - **Automated Build System**: Cake build automation with cross-platform support
 - **Package Distribution**: Available as NuGet and npm packages
@@ -80,6 +90,56 @@ dotnet cake --target=Publish   # Publish to registries
 # calculator.grpc.server:latest
 # calculator.grpc.client:latest
 ```
+
+### **Docker Hub Publishing** (NEW ✨)
+```bash
+# Login to Docker Hub
+docker login
+
+# Tag images for Docker Hub
+docker tag calculator.grpc.server:latest pskumar81/calculator-grpc-server:latest
+docker tag calculator.grpc.client:latest pskumar81/calculator-grpc-client:latest
+
+# Push to Docker Hub
+docker push pskumar81/calculator-grpc-server:latest
+docker push pskumar81/calculator-grpc-client:latest
+
+# Public repositories now available:
+# https://hub.docker.com/r/pskumar81/calculator-grpc-server
+# https://hub.docker.com/r/pskumar81/calculator-grpc-client
+```
+
+### **Using Published Images**
+```bash
+# Pull from Docker Hub
+docker pull pskumar81/calculator-grpc-server:latest
+docker pull pskumar81/calculator-grpc-client:latest
+
+# Run server from Docker Hub
+docker run -p 5002:5002 pskumar81/calculator-grpc-server:latest
+
+# Run client from Docker Hub
+docker run -it --rm -e SERVER_URL="http://host.docker.internal:5002" pskumar81/calculator-grpc-client:latest
+```
+
+### **Container Management** (NEW ✨)
+```bash
+# Comprehensive container lifecycle management
+./run-containers.ps1 start      # Start server and create network
+./run-containers.ps1 client     # Run interactive client
+./run-containers.ps1 stop       # Stop and remove containers
+./run-containers.ps1 restart    # Restart containers
+./run-containers.ps1 status     # Show container status
+./run-containers.ps1 logs       # Show container logs
+./run-containers.ps1 cleanup    # Remove containers and network
+
+# Features:
+# - Automatic network creation (calculator-grpc-network)
+# - Consistent container naming (calculator-grpc-server/client)
+# - Health monitoring and status reporting
+# - Cross-platform support (PowerShell/Bash)
+```
+
 ## ☁️ **Azure Cloud Deployment** (NEW ✨)
 
 ### **Infrastructure as Code**
@@ -186,7 +246,16 @@ _logger.LogInformation("Operation {Operation} executed for numbers {Number1} and
 
 ## 🚀 **Quick Start Guide**
 
-### **Option 1: Docker (Recommended)**
+### **Option 1: Docker Hub (Fastest)**
+```bash
+# Run directly from published images
+docker run -d -p 5002:5002 --name calc-server pskumar81/calculator-grpc-server:latest
+docker run -it --rm -e SERVER_URL="http://host.docker.internal:5002" pskumar81/calculator-grpc-client:latest
+
+# No build required - images are pre-built and ready to use!
+```
+
+### **Option 2: Docker (Build Locally)**
 ```bash
 # Clone and build
 git clone https://github.com/pskumar81/Calculator.Grpc.git
@@ -198,7 +267,7 @@ docker run -d -p 5002:5002 --name calc-server calculator.grpc.server
 docker run -it --rm -e SERVER_URL="http://host.docker.internal:5002" calculator.grpc.client
 ```
 
-### **Option 2: Local Development**
+### **Option 3: Local Development**
 ```bash
 # Build solution
 dotnet build
@@ -210,7 +279,7 @@ cd Calculator.Server && dotnet run
 cd Calculator.Client && dotnet run
 ```
 
-### **Option 3: Azure Cloud Deployment**
+### **Option 4: Azure Cloud Deployment**
 ```bash
 # Deploy infrastructure
 az login
@@ -426,6 +495,8 @@ Calculator.Grpc/
 ├── 🏗️ build.cake                     # Cake build automation
 ├── 🐳 docker-compose.yml             # Container orchestration  
 ├── 🔧 build-docker-images.ps1        # Consistent image building
+├── 📤 push-to-dockerhub.ps1          # Docker Hub publishing
+├── 🎮 run-containers.ps1             # Container management
 │
 ├── Calculator.Server/                 # gRPC Server
 │   ├── 📝 Dockerfile                 # Production-hardened container
