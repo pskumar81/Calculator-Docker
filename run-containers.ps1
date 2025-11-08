@@ -5,7 +5,7 @@
 
 param(
     [Parameter(Mandatory=$false)]
-    [ValidateSet("start", "stop", "restart", "status", "logs", "cleanup")]
+    [ValidateSet("start", "stop", "restart", "status", "logs", "cleanup", "client")]
     [string]$Action = "start"
 )
 
@@ -15,6 +15,35 @@ $CLIENT_IMAGE = "calculator.grpc.client:latest"
 $SERVER_CONTAINER = "calculator-grpc-server"
 $CLIENT_CONTAINER = "calculator-grpc-client"
 $NETWORK_NAME = "calculator-grpc-network"
+
+function Start-Client {
+    Write-Host "💻 Starting Calculator Client..." -ForegroundColor Green
+    
+    # Check if server is running
+    $serverRunning = docker ps -q --filter name=$SERVER_CONTAINER
+    if (-not $serverRunning) {
+        Write-Error "❌ Server container '$SERVER_CONTAINER' is not running. Please start the server first with: .\run-containers.ps1 start"
+        return
+    }
+    
+    # Check if network exists
+    $networkExists = docker network ls --filter name=$NETWORK_NAME --format "{{.Name}}" | Where-Object { $_ -eq $NETWORK_NAME }
+    if (-not $networkExists) {
+        Write-Error "❌ Network '$NETWORK_NAME' does not exist. Please start the server first with: .\run-containers.ps1 start"
+        return
+    }
+    
+    Write-Host "🔗 Connecting to server: http://${SERVER_CONTAINER}:5002" -ForegroundColor Cyan
+    Write-Host "📡 Using network: $NETWORK_NAME" -ForegroundColor Cyan
+    Write-Host ""
+    
+    # Run client interactively
+    docker run -it --rm `
+        --name $CLIENT_CONTAINER `
+        --network $NETWORK_NAME `
+        -e SERVER_URL="http://${SERVER_CONTAINER}:5002" `
+        $CLIENT_IMAGE
+}
 
 function Start-Containers {
     Write-Host "🚀 Starting Calculator.Grpc Containers..." -ForegroundColor Green
@@ -46,7 +75,7 @@ function Start-Containers {
         Write-Host ""
         
         Write-Host "ℹ️  To run client interactively:" -ForegroundColor Cyan
-        Write-Host "   docker run -it --rm --name $CLIENT_CONTAINER --network $NETWORK_NAME -e SERVER_URL=`"http://$SERVER_CONTAINER:5002`" $CLIENT_IMAGE"
+        Write-Host "   docker run -it --rm --name $CLIENT_CONTAINER --network $NETWORK_NAME -e SERVER_URL=`"http://${SERVER_CONTAINER}:5002`" $CLIENT_IMAGE"
     } else {
         Write-Error "❌ Failed to start server container"
     }
@@ -153,16 +182,18 @@ function Cleanup-Environment {
 # Main execution
 switch ($Action.ToLower()) {
     "start" { Start-Containers }
+    "client" { Start-Client }
     "stop" { Stop-Containers }
     "restart" { Restart-Containers }
     "status" { Get-ContainerStatus }
     "logs" { Show-Logs }
     "cleanup" { Cleanup-Environment }
     default { 
-        Write-Host "Usage: .\run-containers.ps1 [start|stop|restart|status|logs|cleanup]" -ForegroundColor Yellow
+        Write-Host "Usage: .\run-containers.ps1 [start|client|stop|restart|status|logs|cleanup]" -ForegroundColor Yellow
         Write-Host ""
         Write-Host "Commands:" -ForegroundColor Cyan
         Write-Host "  start   - Start server and create network"
+        Write-Host "  client  - Start interactive client (server must be running)"
         Write-Host "  stop    - Stop and remove containers"
         Write-Host "  restart - Restart containers"
         Write-Host "  status  - Show container status"
