@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_calcserver_name": {
+            "defaultValue": "calcserver",
+            "type": "String"
+        },
+        "disks_calcserver_disk1_0a82b03182f741bb9351236bae02c1ed_externalid": {
+            "defaultValue": "/subscriptions/05e6b6eb-0222-4d4d-ba24-b30a8ef7e42e/resourceGroups/ODL-az-1951521/providers/Microsoft.Compute/disks/calcserver_disk1_0a82b03182f741bb9351236bae02c1ed",
+            "type": "String"
+        },
+        "networkInterfaces_calc_server543_z1_externalid": {
+            "defaultValue": "/subscriptions/05e6b6eb-0222-4d4d-ba24-b30a8ef7e42e/resourceGroups/ODL-az-1951521/providers/Microsoft.Network/networkInterfaces/calc.server543_z1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2024-11-01",
+            "name": "[parameters('virtualMachines_calcserver_name')]",
+            "location": "eastus",
+            "zones": [
+                "1"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2s_v3"
+                },
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "canonical",
+                        "offer": "ubuntu-24_04-lts",
+                        "sku": "server",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_calcserver_name'), '_disk1_0a82b03182f741bb9351236bae02c1ed')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[parameters('disks_calcserver_disk1_0a82b03182f741bb9351236bae02c1ed_externalid')]"
+                        },
+                        "deleteOption": "Delete",
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": [],
+                    "diskControllerType": "SCSI"
+                },
+                "osProfile": {
+                    "computerName": "calc.server",
+                    "adminUsername": "azureuser",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/azureuser/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC3S2rC3NLlbHalerhxnt88vRcdld1kGQt/BniyheylW/6H5D1+SW3Zanhde+IAzk+YNPfwJCO5iSQGBG6exoDU0cMOhKz4HRy479Vtrh1dhldM9pNsT+Y4k/+1V3gHQOZ8VkMB/Hm4OgikRm/1BfbuKkzwAszQYo7d+7KHpafm5f/9FeW5Dzdi6fB+IOEbPqKfx5f/GAZo756T2CVFx3Va/9QtWUr7qNQLjqKsic11GqWt43NZimWSau4zybweLZZo3MG34fhIQnMCvuFJQrdAJr45uQAptICd5P9qSalBSXkINDhq6s51Ezzjtz1y0c2VkNIw8UQdJWdFabUeeNa28mg1JqABIMG5GW/Wv6uVeKMiYSPVKUD+rKAEktYkL0VCON8mi2QGBtBlPNVq3lCvd6lqAnmM+zvckXsrUqj/477yb143VvHCS4vSP7BQSTi4V5HnaUbSTdkIFsQ21QDf9uVtfJTUmJv1AgnWOKV2DFbWLCR8Vz4iYGUyFskr++0= generated-by-azure"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "securityProfile": {
+                    "uefiSettings": {
+                        "secureBootEnabled": true,
+                        "vTpmEnabled": true
+                    },
+                    "securityType": "TrustedLaunch"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_calc_server543_z1_externalid')]",
+                            "properties": {
+                                "deleteOption": "Detach"
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        }
+    ]
+}

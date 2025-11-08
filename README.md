@@ -10,6 +10,7 @@ A modern, production-ready calculator implementation using gRPC for service comm
 ## 🆕 **What's New** (November 2025)
 - **📤 Docker Hub Integration**: Images now published to [pskumar81/calculator-grpc-server](https://hub.docker.com/r/pskumar81/calculator-grpc-server) and [pskumar81/calculator-grpc-client](https://hub.docker.com/r/pskumar81/calculator-grpc-client)
 - **🎮 Container Management**: New `run-containers.ps1` script for complete container lifecycle management
+- **☁️ Azure VM Testing**: Successfully tested and verified Docker container deployment on Azure VMs
 - **⚡ Quick Start**: Run directly from Docker Hub without building - just `docker run`
 - **🔄 Consistent Naming**: Standardized Docker image and container naming conventions
 - **🌐 Cross-Platform**: Enhanced PowerShell and Bash script support
@@ -174,6 +175,13 @@ az deployment group create \
   --template-file azure-infrastructure/calculator-vms.json
 ```
 
+### **✅ Testing Status**
+- **Azure VM Deployment**: ✅ Successfully tested and verified
+- **Docker Container Loading**: ✅ Images successfully pulled from Docker Hub to Azure VM
+- **gRPC Communication**: ✅ Server-client communication working on Azure infrastructure
+- **Network Configuration**: ✅ Container networking and port exposure verified
+- **Production Readiness**: ✅ Confirmed deployment process for production use
+
 ## 🐳 **Enhanced Docker Support**
 
 ### **Security Hardened Containers**
@@ -279,13 +287,27 @@ cd Calculator.Server && dotnet run
 cd Calculator.Client && dotnet run
 ```
 
-### **Option 4: Azure Cloud Deployment**
+### **Option 4: Azure Cloud Deployment** ✅
 ```bash
-# Deploy infrastructure
+# Method 1: Infrastructure deployment (ARM templates)
 az login
 ./deployment-scripts/Deploy-Azure.ps1
 
-# Applications auto-deploy to VMs with systemd services
+# Method 2: Manual Docker deployment to existing Azure VM
+# SSH to Azure VM
+ssh -i your-key.pem azureuser@your-vm-ip
+
+# Install Docker and pull images from Docker Hub
+sudo apt update && sudo apt install -y docker.io
+docker pull pskumar81/calculator-grpc-server:latest
+docker pull pskumar81/calculator-grpc-client:latest
+
+# Run containers on Azure VM
+docker network create calculator-grpc-network
+docker run -d --name calculator-grpc-server --network calculator-grpc-network -p 5002:5002 pskumar81/calculator-grpc-server:latest
+docker run -it --rm --name calculator-grpc-client --network calculator-grpc-network -e SERVER_URL="http://calculator-grpc-server:5002" pskumar81/calculator-grpc-client:latest
+
+# ✅ Tested and verified working on Azure VMs
 ```
 
 ## 📦 **Package Usage Examples**
