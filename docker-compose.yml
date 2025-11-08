@@ -2,9 +2,11 @@ version: '3.8'
 
 services:
   calculator-server:
+    image: calculator.grpc.server:latest
     build:
       context: .
       dockerfile: Calculator.Server/Dockerfile
+    container_name: calculator-grpc-server
     ports:
       - "5002:5002"
     environment:
@@ -14,9 +16,11 @@ services:
       - calculator-network
 
   calculator-client:
+    image: calculator.grpc.client:latest
     build:
       context: .
       dockerfile: Calculator.Client/Dockerfile
+    container_name: calculator-grpc-client
     depends_on:
       - calculator-server
     environment:
