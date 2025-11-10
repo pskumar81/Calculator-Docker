@@ -45,7 +45,7 @@ jobs:
 
     - name: Setup Node.js (for JavaScript analysis)
       if: matrix.language == 'javascript'
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '18'
 
@@ -78,7 +78,7 @@ jobs:
         dotnet-version: '9.0.x'
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: '18'
 
