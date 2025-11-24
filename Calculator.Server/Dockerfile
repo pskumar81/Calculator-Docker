@@ -12,7 +12,7 @@ RUN dotnet build "Calculator.Server/Calculator.Server.csproj" -c Release -o /app
 FROM build AS publish
 RUN dotnet publish "Calculator.Server/Calculator.Server.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
 # Add image metadata and labels
 LABEL maintainer="Calculator.Grpc Team"
